@@ -1,0 +1,12 @@
+{
+    "name": "dcr/simplewebappphp",
+    "description": "simple-webapp-php is a demo app",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "David Cuerrier",
+            "homepage": "https://redhat.com",
+            "role": "Owner"
+        }
+    ]
+}
