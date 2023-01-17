@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: debug
+  namespace: redhat-ocp-demo
+spec:
+  params:
+    - default: ls
+      description: The command to perform
+      name: CMD
+      type: string
+  steps:
+    - args:
+        - |-
+          $(inputs.params.CMD)
+      command:
+        - /bin/bash
+        - '-c'
+      image: 'image-registry.openshift-image-registry.svc:5000/openshift/cli:latest'
+      name: apply
+      resources: {}
+      workingDir: /workspace/source
+  workspaces:
+    - name: source

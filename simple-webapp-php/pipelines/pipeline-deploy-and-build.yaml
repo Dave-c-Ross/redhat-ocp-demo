@@ -1,0 +1,81 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-and-deploy
+  namespace: redhat-ocp-demo
+spec:
+  params:
+    - description: name of the deployment to be patched
+      name: deployment-name
+      type: string
+    - description: Repository URL to clone from
+      name: git-url
+      type: string
+    - description: 'Revision to checkout. (branch, tag, sha, ref, etc...)'
+      name: git-revision
+      type: string
+    - description: Subdirectory inside the `output` Workspace to clone the repo into.
+      name: git-subdirectory
+      type: string
+    - description: image to be built from the code
+      name: IMAGE
+      type: string
+  tasks:
+    - name: fetch-repository
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: deleteExisting
+          value: 'true'
+        - name: revision
+          value: $(params.git-revision)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: build-image
+      params:
+        - name: TLSVERIFY
+          value: 'false'
+        - name: IMAGE
+          value: '$(params.IMAGE):$(tasks.fetch-repository.results.commit)'
+        - name: CONTEXT
+          value: $(params.git-subdirectory)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: apply-manifests
+      params:
+        - name: manifest_dir
+          value: ./simple-webapp-php/deployments
+      runAfter:
+        - build-image
+      taskRef:
+        kind: Task
+        name: apply-manifests
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: update-deployment
+      params:
+        - name: deployment
+          value: $(params.deployment-name)
+        - name: IMAGE
+          value: '$(params.IMAGE):$(tasks.fetch-repository.results.commit)'
+      runAfter:
+        - apply-manifests
+      taskRef:
+        kind: Task
+        name: update-deployment
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+  workspaces:
+    - name: shared-workspace

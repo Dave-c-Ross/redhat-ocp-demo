@@ -1,0 +1,22 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: simple-webapp-php-route
+  namespace: redhat-ocp-demo
+  uid: 3e67ebc8-06fb-423e-8c83-0ec64da2f8ad
+  resourceVersion: '133052692'
+  creationTimestamp: '2023-01-17T17:19:08Z'
+  labels:
+    app.kubernetes.io/instance: simple-webapp-php
+spec:
+  host: simple-webapp-php.apps.wingman.laby.cc
+  to:
+    kind: Service
+    name: simple-webapp-php-service
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
