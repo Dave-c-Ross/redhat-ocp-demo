@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  annotations:
+    pipeline.openshift.io/started-by: 'kube:admin'
+  name: build-and-deploy-b99c3h
+  namespace: redhat-ocp-demo
+  labels:
+    tekton.dev/pipeline: build-and-deploy
+spec:
+  params:
+    - name: deployment-name
+      value: simple-webapp-php
+    - name: git-url
+      value: 'https://github.com/Dave-c-Ross/redhat-ocp-demo.git'
+    - name: git-revision
+      value: devel
+    - name: git-subdirectory
+      value: simple-webapp-php
+    - name: IMAGE
+      value: >-
+        image-registry.openshift-image-registry.svc:5000/redhat-ocp-demo/simple-webapp-php
+  pipelineRef:
+    name: build-and-deploy
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 50Mi
+          storageClassName: gp2
+          volumeMode: Filesystem
+        status: {}
