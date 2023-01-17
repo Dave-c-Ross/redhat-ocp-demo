@@ -1,0 +1,14 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: simple-webapp-php-route
+  namespace: redhat-ocp-demo
+spec:
+  host: simple-webapp-php.apps.wingman.laby.cc
+  to:
+    kind: Service
+    name: simple-webapp-php-service
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
