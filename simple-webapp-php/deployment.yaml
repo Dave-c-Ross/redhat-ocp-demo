@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: simple-webapp-php
+    app.kubernetes.io/component: simple-webapp-php
+    app.kubernetes.io/instance: simple-webapp-php
+    app.kubernetes.io/part-of: simple-webapp-php
+    app.openshift.io/runtime: redhat
+  name: simple-webapp-php
+  namespace: redhat-ocp-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-webapp-php
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: simple-webapp-php
+        deploymentconfig: simple-webapp-php
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/redhat-ocp-demo/simple-webapp-php:latest
+        imagePullPolicy: Always
+        name: simple-webapp-php
+        resources: {}
