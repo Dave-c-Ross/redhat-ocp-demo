@@ -3,7 +3,7 @@ kind: PipelineRun
 metadata:
   annotations:
     pipeline.openshift.io/started-by: 'kube:admin'
-  name: build-and-deploy-b99c3h
+  name: build-and-deploy-2
   namespace: redhat-ocp-demo
   labels:
     tekton.dev/pipeline: build-and-deploy

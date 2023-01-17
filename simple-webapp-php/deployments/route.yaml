@@ -4,7 +4,7 @@ metadata:
   name: simple-webapp-php-route
   namespace: redhat-ocp-demo
 spec:
-  host: simple-webapp-php.apps.wingman.laby.cc
+  host: fsimple-webapp-php.apps.wingman.laby.cc
   to:
     kind: Service
     name: simple-webapp-php-service
