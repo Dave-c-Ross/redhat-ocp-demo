@@ -2,7 +2,7 @@ apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
   annotations:
-  name: elasticsearch-sample
+  name: elasticsearch-sample-2
   namespace: redhat-ocp-demo
 spec:
   auth: {}
